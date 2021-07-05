@@ -5,4 +5,10 @@ After:
   - omnipay-services
   - omnipay-routes
   - userformsconfig
---
+---
+
+DNADesign\ElementalUserForms\Model\ElementForm:
+  test: 'AAA'
+
+SilverStripe\UserForms\Model\UserDefinedForm:
+  test: 'BBB'
