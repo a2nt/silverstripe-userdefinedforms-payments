@@ -68,7 +68,7 @@ class UserFormPayments extends DataExtension
 
 		$grid = GridField::create(
             'CustomRules',
-            _t(__CLASS__.'.PAYMENTS', 'Custom Rules'),
+            _t(__CLASS__.'.CustomRules', 'Custom Rules'),
             $this->owner->CustomRules(),
             $this->getRulesConfig()
         );
@@ -81,13 +81,15 @@ class UserFormPayments extends DataExtension
 		$fields->addFieldsToTab('Root.Payments', [
 			LiteralField::create(
 				'PaymentsNote',
-				'<div class="alert alert-info">Add conditional logic to require payment</div>'
+				'<div class="alert alert-info">'
+				._t(__CLASS__ .'.PaymentsNote','Add conditional logic to require payment')
+				.'</div>'
 			),
 			DropdownField::create(
                 'CustomRulesCondition',
-                _t(__CLASS__.'REQUIRECONDITION','Require Condition'),
+                _t(__CLASS__.'.RequireCondition','Require Condition'),
                 [
-                	'Never' => 'Never',
+                	'Never' => _t(__CLASS__ .'.RequireIfNever','Never'),
                     'Or' => _t(
                         'SilverStripe\\UserForms\\Model\\UserDefinedForm.SENDIFOR',
                         'Any conditions are true'
@@ -101,6 +103,6 @@ class UserFormPayments extends DataExtension
 			$grid
 		]);
 
-		$fields->fieldByName('Root.Payments')->setTitle(_t(__CLASS__ . '.PAYMENTSTAB', 'Payment'));
+		$fields->fieldByName('Root.Payments')->setTitle(_t(__CLASS__ . '.PaymentsTab', 'Payments'));
 	}
 }
