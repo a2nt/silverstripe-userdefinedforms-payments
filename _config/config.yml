@@ -8,7 +8,14 @@ After:
 ---
 
 DNADesign\ElementalUserForms\Model\ElementForm:
-  test: 'AAA'
+  extensions:
+    - A2nt\UserFormsPayments\Extensions\UserFormPayments
 
-SilverStripe\UserForms\Model\UserDefinedForm:
-  test: 'BBB'
+#SilverStripe\UserForms\Model\UserDefinedForm:
+#  extensions:
+#    - A2nt\UserFormsPayments\Extensions\UserFormPayments
+#
+# Rewrite has_one value of Payment Condition Rules
+#A2nt\UserFormsPayments\Models\PaymentConditionRule:
+#  has_one:
+#    'Parent': SilverStripe\UserForms\Model\UserDefinedForm
