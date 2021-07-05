@@ -1,0 +1,8 @@
+---
+Name: a2nt-userdefinedforms-payments
+After:
+  - silverstripe-omnipay-legacy
+  - omnipay-services
+  - omnipay-routes
+  - userformsconfig
+--
