@@ -30,7 +30,8 @@ class PaymentConditionRule extends DataObject
 
 	private static $db = [
         'ConditionOption' => 'Enum("IsBlank,IsNotBlank,Equals,NotEquals,ValueLessThan,ValueLessThanEqual,ValueGreaterThan,ValueGreaterThanEqual")',
-        'ConditionValue' => 'Varchar'
+        'ConditionValue' => 'Varchar',
+		'Amount' => 'Currency',
     ];
 
 	private static $has_one = [

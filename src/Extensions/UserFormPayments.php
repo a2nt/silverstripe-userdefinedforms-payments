@@ -5,6 +5,7 @@ namespace A2nt\UserFormsPayments\Extensions;
 
 
 use A2nt\UserFormsPayments\Models\PaymentConditionRule;
+use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
@@ -13,6 +14,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\GridFieldExtensions\GridFieldAddNewInlineButton;
@@ -56,7 +58,10 @@ class UserFormPayments extends DataExtension
             },
             'ConditionValue' => function ($record, $column, $grid) {
                 return TextField::create($column);
-            }
+            },
+	        'Amount' => function ($record, $column, $grid) {
+                return CurrencyField::create($column);
+            },
         ));
 
         return $config;
