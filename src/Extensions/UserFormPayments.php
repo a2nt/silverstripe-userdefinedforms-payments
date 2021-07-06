@@ -72,7 +72,7 @@ class UserFormPayments extends DataExtension
 
         $grid = GridField::create(
             'PaymentRules',
-            _t(__CLASS__.'.PaymentRules', 'Custom Rules'),
+            _t(__CLASS__.'.PaymentRules', 'Payment Rules'),
             $this->owner->PaymentRules(),
             $this->getRulesConfig()
         );

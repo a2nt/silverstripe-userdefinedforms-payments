@@ -1,0 +1,9 @@
+---
+Name: a2nt-userdefinedforms-payments-routes
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'userpayment': 'A2nt\UserFormsPayments\Controllers\UserFormsPaymentController'
