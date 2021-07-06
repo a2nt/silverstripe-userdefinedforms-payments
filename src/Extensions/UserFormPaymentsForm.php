@@ -13,13 +13,14 @@ class UserFormPaymentsForm extends DataExtension
 	private static $db = [
 		'OrderID' => 'Varchar',
 		'Amount' => 'Currency',
-		'Status' => 'Enum("Unpaid,Paid")',
+		'PaymentStatus' => 'Enum("Not Required,Unpaid,Paid","Not Required")',
 	];
 
 	public function updateAfterProcess()
 	{
 		$obj = $this->owner;
 		$vals = $obj->Values();
+
 		// collect data
 		$data = [];
 		foreach ($vals as $valField) {
@@ -27,12 +28,21 @@ class UserFormPaymentsForm extends DataExtension
 		}
 
 		// calculate sum
-		$paymentRules = $obj->Parent()->PaymentRules();
+		/* @var ElementForm $userForm */
+		$userForm = $obj->Parent();
+		$paymentRules = $userForm->PaymentRules();
+
 		$amount = 0;
 		foreach ($paymentRules as $rule) {
 			if($rule->matches($data)){
 				$amount += $rule->Amount;
 			}
+		}
+
+		if ($amount > 0) {
+			$obj->PaymentStatus = 'Unpaid';
+		} else {
+			$obj->PaymentStatus = 'Not Required';
 		}
 
 		$obj->Amount = $amount;
@@ -44,7 +54,7 @@ class UserFormPaymentsForm extends DataExtension
 	{
 		parent::updateCMSFields($fields);
 
-		$readOnlyFields = ['OrderID', 'Amount', 'Status'];
+		$readOnlyFields = ['OrderID', 'Amount', 'PaymentStatus'];
 
 		foreach ($readOnlyFields as $key) {
 			$fields

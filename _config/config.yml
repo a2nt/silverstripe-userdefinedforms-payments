@@ -9,9 +9,9 @@ After:
 SilverStripe\UserForms\Model\Submission\SubmittedForm:
   summary_fields:
     - OrderID
+    - PaymentStatus
     - ID
     - Created
-    - Status
     - Amount
   extensions:
     - SilverStripe\Omnipay\Extensions\Payable
