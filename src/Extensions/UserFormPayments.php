@@ -70,6 +70,8 @@ class UserFormPayments extends DataExtension
     {
         parent::updateCMSFields($fields);
 
+        $fields->removeByName('PaymentRules');
+        
         $grid = GridField::create(
             'PaymentRules',
             _t(__CLASS__.'.PaymentRules', 'Payment Rules'),
@@ -82,7 +84,7 @@ class UserFormPayments extends DataExtension
             . 'payment will not be required.'
         ));
 
-        $fields->addFieldsToTab('Root.Payments', [
+        $fields->addFieldsToTab('Root.PaymentRules', [
             LiteralField::create(
                 'PaymentsNote',
                 '<div class="alert alert-info">'
@@ -108,7 +110,7 @@ class UserFormPayments extends DataExtension
         ]);
 
         $fields
-            ->fieldByName('Root.Payments')
+            ->fieldByName('Root.PaymentRules')
             ->setTitle(_t(__CLASS__ . '.PaymentsTab', 'Payment Rules'));
     }
 }
