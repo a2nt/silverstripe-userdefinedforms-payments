@@ -3,7 +3,6 @@
 
 namespace A2nt\UserFormsPayments\Models;
 
-
 use DNADesign\ElementalUserForms\Model\ElementForm;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
@@ -11,13 +10,13 @@ use SilverStripe\UserForms\Model\EditableFormField;
 
 class PaymentConditionRule extends DataObject
 {
-	/**
+    /**
      * List of options
      *
      * @config
      * @var array
      */
-	private static $condition_options = [
+    private static $condition_options = [
         'IsBlank' => 'Is blank',
         'IsNotBlank' => 'Is not blank',
         'Equals' => 'Equals',
@@ -28,20 +27,20 @@ class PaymentConditionRule extends DataObject
         'ValueGreaterThanEqual' => 'Greater than or equal'
     ];
 
-	private static $db = [
+    private static $db = [
         'ConditionOption' => 'Enum("IsBlank,IsNotBlank,Equals,NotEquals,ValueLessThan,ValueLessThanEqual,ValueGreaterThan,ValueGreaterThanEqual")',
         'ConditionValue' => 'Varchar',
-		'Amount' => 'Currency',
+        'Amount' => 'Currency',
     ];
 
-	private static $has_one = [
+    private static $has_one = [
         'Parent' => ElementForm::class,
         'ConditionField' => EditableFormField::class,
     ];
 
-	private static $table_name = 'UserDefinedForm_PaymentConditionRule';
+    private static $table_name = 'UserDefinedForm_PaymentConditionRule';
 
-	/**
+    /**
      *
      * Determine if this rule matches the given condition
      *
