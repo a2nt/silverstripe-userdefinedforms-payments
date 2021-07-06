@@ -50,7 +50,7 @@ class UserFormsPaymentController extends \PageController
 
 	public function Form()
     {
-        $factory = GatewayFieldsFactory::create($gateway);
+        $factory = GatewayFieldsFactory::create();//$gateway);
 
         return Form::create(
             $this,
