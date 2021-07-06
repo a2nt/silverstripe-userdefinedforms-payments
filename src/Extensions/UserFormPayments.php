@@ -108,6 +108,8 @@ class UserFormPayments extends DataExtension
 			$grid
 		]);
 
-		$fields->fieldByName('Root.Payments')->setTitle(_t(__CLASS__ . '.PaymentsTab', 'Payments'));
+		$fields
+			->fieldByName('Root.Payments')
+			->setTitle(_t(__CLASS__ . '.PaymentsTab', 'Payment Rules'));
 	}
 }

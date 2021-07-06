@@ -6,6 +6,19 @@ After:
   - omnipay-routes
   - userformsconfig
 ---
+SilverStripe\UserForms\Model\Submission\SubmittedForm:
+  summary_fields:
+    - ID
+    - Created
+    - Amount
+    - TotalPaid
+  extensions:
+    - SilverStripe\Omnipay\Extensions\Payable
+    - A2nt\UserFormsPayments\Extensions\UserFormPaymentsForm
+
+SilverStripe\Omnipay\Model\Payment:
+  has_one:
+    'SubmittedForm': SilverStripe\UserForms\Model\Submission\SubmittedForm
 
 DNADesign\ElementalUserForms\Model\ElementForm:
   extensions:
