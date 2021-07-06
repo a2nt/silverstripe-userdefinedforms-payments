@@ -24,11 +24,12 @@ class PaymentConditionRule extends DataObject
         'ValueLessThan' => 'Less than',
         'ValueLessThanEqual' => 'Less than or equal',
         'ValueGreaterThan' => 'Greater than',
-        'ValueGreaterThanEqual' => 'Greater than or equal'
+        'ValueGreaterThanEqual' => 'Greater than or equal',
+        'Summarize' => 'Add amount entered to the field',
     ];
 
     private static $db = [
-        'ConditionOption' => 'Enum("IsBlank,IsNotBlank,Equals,NotEquals,ValueLessThan,ValueLessThanEqual,ValueGreaterThan,ValueGreaterThanEqual")',
+        'ConditionOption' => 'Enum("IsBlank,IsNotBlank,Equals,NotEquals,ValueLessThan,ValueLessThanEqual,ValueGreaterThan,ValueGreaterThanEqual,Summarize")',
         'ConditionValue' => 'Varchar',
         'Amount' => 'Currency',
     ];

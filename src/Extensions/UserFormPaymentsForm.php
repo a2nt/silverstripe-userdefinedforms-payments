@@ -3,10 +3,14 @@
 
 namespace A2nt\UserFormsPayments\Extensions;
 
+use A2nt\UserFormsPayments\Controllers\UserFormsPaymentController;
 use DNADesign\ElementalUserForms\Model\ElementForm;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\UserForms\Model\EditableFormField\EditableNumericField;
 
 class UserFormPaymentsForm extends DataExtension
 {
@@ -34,7 +38,12 @@ class UserFormPaymentsForm extends DataExtension
 
         $amount = 0;
         foreach ($paymentRules as $rule) {
-            if ($rule->matches($data)) {
+            $field = $rule->ConditionField();
+            if ($field->ClassName === EditableNumericField::class
+                && $rule->ConditionOption === 'Summarize'
+            ) {
+                $amount += $data[$field->Name];
+            } else if ($rule->matches($data)) {
                 $amount += $rule->Amount;
                 
                 if ($userForm->PaymentRulesCondition === 'Or') {
@@ -53,6 +62,12 @@ class UserFormPaymentsForm extends DataExtension
 
         $obj->OrderID = 'O-'.$obj->ID.'-'.strtoupper(substr(uniqid('', true), 0, 4));
         $obj->write();
+
+        $link = singleton(UserFormsPaymentController::class)->Link('/pay/SubmittedForm/'.$obj->ID);
+
+        $response = HTTPResponse::create()->redirect($link);
+        $response->output();
+        exit();
     }
 
     public function updateCMSFields(FieldList $fields)
