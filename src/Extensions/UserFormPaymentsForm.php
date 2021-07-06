@@ -11,12 +11,15 @@ use SilverStripe\ORM\DataExtension;
 class UserFormPaymentsForm extends DataExtension
 {
 	private static $db = [
+		'OrderID' => 'Varchar',
 		'Amount' => 'Currency',
+		'Status' => 'Enum("Unpaid,Paid")',
 	];
 
 	public function updateAfterProcess()
 	{
-		$vals = $this->owner->Values();
+		$obj = $this->owner;
+		$vals = $obj->Values();
 		// collect data
 		$data = [];
 		foreach ($vals as $valField) {
@@ -24,7 +27,7 @@ class UserFormPaymentsForm extends DataExtension
 		}
 
 		// calculate sum
-		$paymentRules = $this->owner->Parent()->CustomRules();
+		$paymentRules = $obj->Parent()->PaymentRules();
 		$amount = 0;
 		foreach ($paymentRules as $rule) {
 			if($rule->matches($data)){
@@ -32,15 +35,23 @@ class UserFormPaymentsForm extends DataExtension
 			}
 		}
 
-		$this->owner->Amount = $amount;
-		$this->owner->write();
+		$obj->Amount = $amount;
+		$obj->OrderID = 'O-'.$obj->ID.'-'.strtoupper(substr(uniqid('',true),0,4));
+		$obj->write();
 	}
 
 	public function updateCMSFields(FieldList $fields)
 	{
 		parent::updateCMSFields($fields);
 
-		$fields->dataFieldByName('Amount')->setReadonly(true);
+		$readOnlyFields = ['OrderID', 'Amount', 'Status'];
+
+		foreach ($readOnlyFields as $key) {
+			$fields
+				->dataFieldByName($key)
+				->setReadonly(true);
+		}
+
 		/*$fields->addFieldToTab(
 			'Root.Main',
 			NumericField::create('TotalPaid')

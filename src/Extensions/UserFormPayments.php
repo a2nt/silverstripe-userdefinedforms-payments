@@ -23,11 +23,11 @@ use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 class UserFormPayments extends DataExtension
 {
 	private static $db = [
-		'CustomRulesCondition' => 'Enum("Never,And,Or","Never")',
+		'PaymentRulesCondition' => 'Enum("Never,And,Or","Never")',
 	];
 
 	private static $has_many = [
-        'CustomRules' => PaymentConditionRule::class,
+        'PaymentRules' => PaymentConditionRule::class,
     ];
 
 	/**
@@ -72,9 +72,9 @@ class UserFormPayments extends DataExtension
 		parent::updateCMSFields($fields);
 
 		$grid = GridField::create(
-            'CustomRules',
-            _t(__CLASS__.'.CustomRules', 'Custom Rules'),
-            $this->owner->CustomRules(),
+            'PaymentRules',
+            _t(__CLASS__.'.PaymentRules', 'Custom Rules'),
+            $this->owner->PaymentRules(),
             $this->getRulesConfig()
         );
         $grid->setDescription(_t(
@@ -91,7 +91,7 @@ class UserFormPayments extends DataExtension
 				.'</div>'
 			),
 			DropdownField::create(
-                'CustomRulesCondition',
+                'PaymentRulesCondition',
                 _t(__CLASS__.'.RequireCondition','Require Condition'),
                 [
                 	'Never' => _t(__CLASS__ .'.RequireIfNever','Never'),

@@ -8,17 +8,18 @@ After:
 ---
 SilverStripe\UserForms\Model\Submission\SubmittedForm:
   summary_fields:
+    - OrderID
     - ID
     - Created
+    - Status
     - Amount
-    - TotalPaid
   extensions:
     - SilverStripe\Omnipay\Extensions\Payable
     - A2nt\UserFormsPayments\Extensions\UserFormPaymentsForm
 
 SilverStripe\Omnipay\Model\Payment:
-  has_one:
-    'SubmittedForm': SilverStripe\UserForms\Model\Submission\SubmittedForm
+  extensions:
+    - A2nt\UserFormsPayments\Extensions\UserFormPayment
 
 DNADesign\ElementalUserForms\Model\ElementForm:
   extensions:
