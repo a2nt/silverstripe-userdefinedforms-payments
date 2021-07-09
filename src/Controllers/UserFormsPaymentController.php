@@ -24,6 +24,7 @@ class UserFormsPaymentController extends \PageController
     private static $allowed_actions = [
         'pay',
         'complete',
+	    'canceled',
         'Form',
     ];
 
@@ -174,7 +175,7 @@ class UserFormsPaymentController extends \PageController
         $payment = Payment::create()
             ->init($gateway, $obj->Amount, 'USD')
             ->setSuccessUrl($this->Link('complete').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID)
-            ->setFailureUrl($this->Link('canceled'));
+            ->setFailureUrl($this->Link('canceled').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID);
         $payment->write();
 
         $response = ServiceFactory::create()
