@@ -141,14 +141,11 @@ class UserFormsPaymentController extends \PageController
         switch ($gateway) {
             case 'PayPal_Express':
                 $response = $this->processPayment($obj);
-
-                var_dump($response->getOmnipayResponse()->getMessage());
-                die(__CLASS__.'_'.__FUNCTION__.' TEST!!!');
-
+                $response->redirectOrRespond()->output();
+                exit();
                 return $response->redirectOrRespond();
                 break;
         }
-        die('aaa');
 
         $factory = GatewayFieldsFactory::create($gateway);
         $fields = $factory->getFields();
@@ -196,10 +193,6 @@ class UserFormsPaymentController extends \PageController
         }
 
         $response = $this->processPayment($obj, $data);
-
-        var_dump($response);
-        die(__CLASS__.'_'.__FUNCTION__.' TEST!!!');
-
         return $response->redirectOrRespond();
     }
 
