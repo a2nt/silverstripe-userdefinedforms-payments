@@ -24,7 +24,7 @@ class UserFormsPaymentController extends \PageController
     private static $allowed_actions = [
         'pay',
         'complete',
-	    'canceled',
+        'canceled',
         'Form',
     ];
 
@@ -194,8 +194,8 @@ class UserFormsPaymentController extends \PageController
         }
 
         if ($obj->Amount > 0) {
-	        $response = $this->processPayment($obj, $data);
-	        return $response->redirectOrRespond();
+            $response = $this->processPayment($obj, $data);
+            return $response->redirectOrRespond();
         }
 
         die('ERROR 00-'.__CLASS__.'_'.__FUNCTION__.': wrong amount');
