@@ -71,7 +71,7 @@ class UserFormPayments extends DataExtension
         parent::updateCMSFields($fields);
 
         $fields->removeByName('PaymentRules');
-        
+
         $grid = GridField::create(
             'PaymentRules',
             _t(__CLASS__.'.PaymentRules', 'Payment Rules'),

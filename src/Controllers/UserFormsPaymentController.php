@@ -24,6 +24,7 @@ class UserFormsPaymentController extends \PageController
     private static $allowed_actions = [
         'pay',
         'complete',
+	    'canceled',
         'Form',
     ];
 
@@ -81,12 +82,12 @@ class UserFormsPaymentController extends \PageController
 
     public function complete(HTTPRequest $request)
     {
-        die(__CLASS__.'_'.__FUNCTION__.' TEST#2!!!');
+        die(__CLASS__.'_'.__FUNCTION__.': Payment compleated.');
     }
 
     public function canceled(HTTPRequest $request)
     {
-        die(__CLASS__.'_'.__FUNCTION__.' TEST#3!!!');
+        die(__CLASS__.'_'.__FUNCTION__.': Payment was canceled.');
     }
 
     public function pay(HTTPRequest $request)
@@ -141,14 +142,11 @@ class UserFormsPaymentController extends \PageController
         switch ($gateway) {
             case 'PayPal_Express':
                 $response = $this->processPayment($obj);
-
-                var_dump($response->getOmnipayResponse()->getMessage());
-                die(__CLASS__.'_'.__FUNCTION__.' TEST!!!');
-
+                $response->redirectOrRespond()->output();
+                exit();
                 return $response->redirectOrRespond();
                 break;
         }
-        die('aaa');
 
         $factory = GatewayFieldsFactory::create($gateway);
         $fields = $factory->getFields();
@@ -177,7 +175,7 @@ class UserFormsPaymentController extends \PageController
         $payment = Payment::create()
             ->init($gateway, $obj->Amount, 'USD')
             ->setSuccessUrl($this->Link('complete').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID)
-            ->setFailureUrl($this->Link('canceled'));
+            ->setFailureUrl($this->Link('canceled').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID);
         $payment->write();
 
         $response = ServiceFactory::create()
@@ -195,12 +193,12 @@ class UserFormsPaymentController extends \PageController
             return $this->httpError(404);
         }
 
-        $response = $this->processPayment($obj, $data);
+        if ($obj->Amount > 0) {
+	        $response = $this->processPayment($obj, $data);
+	        return $response->redirectOrRespond();
+        }
 
-        var_dump($response);
-        die(__CLASS__.'_'.__FUNCTION__.' TEST!!!');
-
-        return $response->redirectOrRespond();
+        die('ERROR 00-'.__CLASS__.'_'.__FUNCTION__.': wrong amount');
     }
 
     public function Link($action = null)

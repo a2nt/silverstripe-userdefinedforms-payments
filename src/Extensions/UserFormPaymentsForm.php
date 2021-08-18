@@ -60,14 +60,20 @@ class UserFormPaymentsForm extends DataExtension
             $obj->Amount = $amount;
         }
 
-        $obj->OrderID = 'O-'.$obj->ID.'-'.strtoupper(substr(uniqid('', true), 0, 4));
-        $obj->write();
+        if ($obj->Amount > 0) {
+	        $obj->OrderID = 'O-' . $obj->ID . '-' . strtoupper(substr(uniqid('', true), 0, 4));
+	        $obj->write();
 
-        $link = singleton(UserFormsPaymentController::class)->Link('/pay/SubmittedForm/'.$obj->ID);
+	        $link = singleton(UserFormsPaymentController::class)->Link('/pay/SubmittedForm/' . $obj->ID);
 
-        $response = HTTPResponse::create()->redirect($link);
-        $response->output();
-        exit();
+	        // break processing at UserDefinedFormController::process($data, $form)
+	        $response = HTTPResponse::create()->redirect($link);
+	        $response->output();
+	        exit();
+        }
+
+        // continue processing at UserDefinedFormController::process($data, $form)
+        return;
     }
 
     public function updateCMSFields(FieldList $fields)
