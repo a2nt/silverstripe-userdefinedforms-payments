@@ -57,6 +57,9 @@ class PaymentConditionRule extends DataObject
         $conditionValue = $this->ConditionValue;
         $result = null;
         switch ($this->ConditionOption) {
+        	case 'Summarize':
+	        	$result = true;
+	        	break;
             case 'IsBlank':
                 $result = empty($fieldValue);
                 break;

@@ -88,7 +88,7 @@ class UserFormPayments extends DataExtension
             LiteralField::create(
                 'PaymentsNote',
                 '<div class="alert alert-info">'
-                ._t(__CLASS__ .'.PaymentsNote', 'Add conditional logic to require payment')
+                ._t(__CLASS__ .'.PaymentsNote', 'Add conditional logic to require payment. Note Amount fields must be Numeric.')
                 .'</div>'
             ),
             DropdownField::create(

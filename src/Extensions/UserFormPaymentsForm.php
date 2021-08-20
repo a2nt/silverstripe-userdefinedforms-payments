@@ -39,6 +39,7 @@ class UserFormPaymentsForm extends DataExtension
         $amount = 0;
         foreach ($paymentRules as $rule) {
             $field = $rule->ConditionField();
+
             if ($field->ClassName === EditableNumericField::class
                 && $rule->ConditionOption === 'Summarize'
             ) {
