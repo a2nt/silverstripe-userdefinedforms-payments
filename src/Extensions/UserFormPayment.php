@@ -1,6 +1,5 @@
 <?php
 
-
 namespace A2nt\UserFormsPayments\Extensions;
 
 use SilverStripe\ORM\DataExtension;
@@ -14,7 +13,6 @@ class UserFormPayment extends DataExtension
 
     public function onCaptured($response)
     {
-        die('onCaptured AAAAAAAAAAAAAAAA');
         $order = $this->owner->Order();
         $order->completePayment($this->owner);
     }
