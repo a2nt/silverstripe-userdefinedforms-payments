@@ -4,6 +4,7 @@
 namespace A2nt\UserFormsPayments\Controllers;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FieldList;
@@ -82,12 +83,14 @@ class UserFormsPaymentController extends \PageController
 
     public function complete(HTTPRequest $request)
     {
-        die(__CLASS__.'_'.__FUNCTION__.': Payment compleated.');
+        die('The payment is received. Thank you! <a href="'.Director::absoluteBaseURL().'">Go back</a>');
+        return $this->render();
     }
 
     public function canceled(HTTPRequest $request)
     {
-        die(__CLASS__.'_'.__FUNCTION__.': Payment was canceled.');
+        die('Payment was canceled. <a href="'.Director::absoluteBaseURL().'">Go back</a>');
+        return $this->render();
     }
 
     public function pay(HTTPRequest $request)
@@ -96,29 +99,6 @@ class UserFormsPaymentController extends \PageController
         if (!$obj) {
             return $this->httpError(404);
         }
-
-        /*$params = [
-            'currency_code' => 'USD',
-            'invoice' => '194-SDX',
-            'item_name' => 'Purchase membership',
-            'amount' => 30,
-            'notify_url' => '',
-            'custom' => '',
-            'bn' => '',
-            'business' => '',
-            'return' => '',
-            'cancel_return' => '',
-            'rm' => 1,
-            'cmd' => '_xclick',
-        ];*/
-        /*var_dump('https://www.paypal.com/cgi-bin/webscr/?'.http_build_query($params));
-        die('aaa');
-        $this->redirect('https://www.paypal.com/cgi-bin/webscr/?'.http_build_query($params));
-*/
-
-        /*if(!$obj) {
-            return $this->httpError(404);
-        }*/
 
         return $this->render();
     }
@@ -176,6 +156,8 @@ class UserFormsPaymentController extends \PageController
             ->init($gateway, $obj->Amount, 'USD')
             ->setSuccessUrl($this->Link('complete').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID)
             ->setFailureUrl($this->Link('canceled').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID);
+
+        $payment->setField('SubmittedFormID', $obj->ID);
         $payment->write();
 
         $response = ServiceFactory::create()
