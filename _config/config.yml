@@ -7,7 +7,7 @@ After:
   - userformsconfig
 ---
 SilverStripe\UserForms\Model\Submission\SubmittedForm:
-  default_sort: 'LastdEdited DESC'
+  default_sort: 'LastEdited DESC'
   summary_fields:
     - OrderID
     - PaymentStatus

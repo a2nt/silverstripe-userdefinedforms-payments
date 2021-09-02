@@ -21,7 +21,7 @@ class UserFormOrders extends ModelAdmin
         switch ($list->dataClass()) {
             case SubmittedForm::class:
                 $list->filter(['Amount:GreaterThan' => 0]);
-                $list->sort('LastdEdited DESC');
+                $list->sort('LastEdited DESC');
                 break;
         }
 
