@@ -3,6 +3,7 @@
 
 namespace A2nt\UserFormsPayments\Controllers;
 
+use Omnipay\PayPal\PayPalItem;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -152,6 +153,7 @@ class UserFormsPaymentController extends \PageController
     protected function processPayment($obj, $data = [])
     {
         $gateway = $this->getGateway();
+
         $payment = Payment::create()
             ->init($gateway, $obj->Amount, 'USD')
             ->setSuccessUrl($this->Link('complete').'/'.$this->getShortPayableObjectName(get_class($obj)).'/'.$obj->ID)
@@ -160,8 +162,27 @@ class UserFormsPaymentController extends \PageController
         $payment->setField('SubmittedFormID', $obj->ID);
         $payment->write();
 
+        $items = $obj->getPaymentItems();
+        $data['items'] = $items;
+        
+        $data['rp_invoice_id'] = $obj->OrderID;
+        $data['custom'] = $obj->OrderID;
+        $data['invoice'] = $obj->OrderID;
+
+        //https://www.paypal.com/webapps/xorouter?cmd=_xclick
+	    //&notify_url=https%3A%2F%2Fwww.folkus.org%2Fwp-admin%2Fadmin-ajax.php%3Faction%3Dfrm_payments_paypal_ipn
+	    //&custom=997%7C485eeee0687b148028c1de8f398edbfa
+	    //&amount=50
+	    //&bn=FormidablePro_SP
+	    //&business=paypal%40folkus.org
+	    //&currency_code=USD
+	    //&item_name=Purchase+membership
+	    //&return=http%3A%2F%2Fwww.folkus.org
+	    //&cancel_return=http%3A%2F%2Fwww.folkus.org
+	    //&rm=1
+	    //&invoice=200-QQI&Z3JncnB0=
         $response = ServiceFactory::create()
-            ->getService($payment, ServiceFactory::INTENT_PAYMENT)
+            ->getService($payment, ServiceFactory::INTENT_PURCHASE)
             ->initiate($data);
 
         /* @var \SilverStripe\Omnipay\Service\ServiceResponse $response */

@@ -8,8 +8,10 @@ use DNADesign\ElementalUserForms\Model\ElementForm;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\UserForms\Model\EditableFormField;
 use SilverStripe\UserForms\Model\EditableFormField\EditableNumericField;
 
 class UserFormPaymentsForm extends DataExtension
@@ -20,10 +22,10 @@ class UserFormPaymentsForm extends DataExtension
         'PaymentStatus' => 'Enum("Not Required,Unpaid,Paid","Not Required")',
     ];
 
-    public function updateAfterProcess()
+    private function collectData()
     {
-        $obj = $this->owner;
-        $vals = $obj->Values();
+    	$obj = $this->owner;
+    	$vals = $obj->Values();
 
         // collect data
         $data = [];
@@ -31,11 +33,20 @@ class UserFormPaymentsForm extends DataExtension
             $data[$valField->Name] = $valField->Value;
         }
 
+        return $data;
+    }
+
+    public function updateAfterProcess()
+    {
+        $obj = $this->owner;
+        $data = $this->collectData();
+
         // calculate sum
         /* @var ElementForm $userForm */
         $userForm = $obj->Parent();
         $paymentRules = $userForm->PaymentRules();
 
+        $once = ($userForm->PaymentRulesCondition === 'Or') ? true : false;
         $amount = 0;
         foreach ($paymentRules as $rule) {
             $field = $rule->ConditionField();
@@ -46,11 +57,11 @@ class UserFormPaymentsForm extends DataExtension
                 $amount += $data[$field->Name];
             } else if ($rule->matches($data)) {
                 $amount += $rule->Amount;
-                
-                if ($userForm->PaymentRulesCondition === 'Or') {
-                    break;
-                }
             }
+
+            if($once && $amount > 0) {
+				break;
+			}
         }
 
         if ($amount <= 0 || $userForm->PaymentRulesCondition === 'Never') {
@@ -75,6 +86,52 @@ class UserFormPaymentsForm extends DataExtension
 
         // continue processing at UserDefinedFormController::process($data, $form)
         return;
+    }
+
+    public function getPaymentItems()
+    {
+    	$obj = $this->owner;
+    	$data = $this->collectData();
+
+    	 /* @var ElementForm $userForm */
+        $userForm = $obj->Parent();
+        $paymentRules = $userForm->PaymentRules();
+
+        $items = [];
+        $once = ($userForm->PaymentRulesCondition === 'Or') ? true : false;
+        
+        $totalAmount = 0;
+        foreach ($paymentRules as $rule) {
+        	/* @var EditableFormField $field */
+            $field = $rule->ConditionField();
+
+            if (
+            	$field->ClassName === EditableNumericField::class
+                && $rule->ConditionOption === 'Summarize'
+            ) {
+                $amount = $data[$field->Name];
+                $items[] = [
+	                'name' => $field->Title,
+		            'price' => $amount,
+		            'quantity' => 1,
+	            ];
+                $totalAmount += $data[$field->Name];
+            } else if ($rule->matches($data)) {
+                $amount = $rule->Amount;
+                $items[] = [
+	                'name' => $field->Title,
+		            'price' => $amount,
+		            'quantity' => 1,
+	            ];
+                $totalAmount += $rule->Amount;
+            }
+
+			if($once && $totalAmount > 0) {
+				break;
+			}
+        }
+
+        return $items;
     }
 
     public function updateCMSFields(FieldList $fields)
