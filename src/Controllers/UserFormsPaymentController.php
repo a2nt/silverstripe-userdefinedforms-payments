@@ -164,7 +164,7 @@ class UserFormsPaymentController extends \PageController
 
         $items = $obj->getPaymentItems();
         $data['items'] = $items;
-        
+
         $data['rp_invoice_id'] = $obj->OrderID;
         $data['custom'] = $obj->OrderID;
         $data['invoice'] = $obj->OrderID;

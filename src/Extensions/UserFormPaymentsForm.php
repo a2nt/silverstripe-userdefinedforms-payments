@@ -110,20 +110,24 @@ class UserFormPaymentsForm extends DataExtension
                 && $rule->ConditionOption === 'Summarize'
             ) {
                 $amount = $data[$field->Name];
-                $items[] = [
-	                'name' => $field->Title,
-		            'price' => $amount,
-		            'quantity' => 1,
-	            ];
-                $totalAmount += $data[$field->Name];
+                if ((float) $amount > 0) {
+	                $items[] = [
+		                'name' => $field->Title,
+		                'price' => $amount,
+		                'quantity' => 1,
+	                ];
+	                $totalAmount += $data[$field->Name];
+                }
             } else if ($rule->matches($data)) {
                 $amount = $rule->Amount;
-                $items[] = [
-	                'name' => $field->Title,
-		            'price' => $amount,
-		            'quantity' => 1,
-	            ];
-                $totalAmount += $rule->Amount;
+                if ((float) $amount > 0) {
+	                $items[] = [
+		                'name' => $field->Title,
+		                'price' => $amount,
+		                'quantity' => 1,
+	                ];
+	                $totalAmount += $rule->Amount;
+                }
             }
 
 			if($once && $totalAmount > 0) {
